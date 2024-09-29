@@ -1,12 +1,10 @@
 package com.example.management;
 
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AppController {
@@ -22,13 +20,13 @@ public class AppController {
     public String index() {
         return "forward:index.html";
     }
-    @GetMapping("/user")
-    public String user() {
-        return "forward:index.html";
+    @GetMapping("/login/{userId}")
+    public String user(@PathVariable String userId) {
+        return "forward:/views/homepage.html";
     }
     @GetMapping("/signup")
     public String signup() {
-        return "forward:index.html";
+        return "forward:/views/signup.html";
     }
 
     @PostMapping("/login")
@@ -39,7 +37,7 @@ public class AppController {
         AppUser appUser = appRepository.getUserByName(user.username());
         if (appUser == null || !appUser.password().equals(user.password()))
             return ResponseEntity.notFound().build();
-        return ResponseEntity.ok("cool all good");
+        return ResponseEntity.status(HttpStatus.FOUND).header("Location", "/login/" + user.username()).build();
     }
 
     @GetMapping("/logout")

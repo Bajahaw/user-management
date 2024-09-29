@@ -14,12 +14,15 @@ function login(xmlhttp){
         let state = document.getElementById('state');
         state.innerHTML = this.response;
 
-        if (this.status === 200){
-            window.history.pushState({}, '', '/user');
-            btn.innerHTML = 'LogOut';
-            btn.style.background = 'red';
-            user.value = '';
-            pass.value = '';
+        // if (this.status === 200){
+        //     window.history.pushState({}, '', '/user');
+        //     btn.innerHTML = 'LogOut';
+        //     btn.style.background = 'red';
+        //     user.value = '';
+        //     pass.value = '';
+        // }
+        if (this.status === 302) {
+            window.location.href = this.getResponseHeader('Location');
         }
         else if (this.status === 404){
             state.innerHTML = 'Wrong email or password';
