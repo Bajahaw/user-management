@@ -13,26 +13,26 @@ public class Application {
 	}
 
 
-	public void init(AppRepository appRepository){
+	public void init(UserRepository userRepository){
 		System.out.println("saving init ... ");
-		appRepository.save(new AppUser("yj6ley", "Radhi"));
-		appRepository.save(new AppUser("YJ6LEY", "radhi"));
+		userRepository.save(new AppUser("yj6ley", "Radhi"));
+		userRepository.save(new AppUser("YJ6LEY", "radhi"));
 	}
 }
 @Component
 class DataInitializer implements CommandLineRunner {
 
-	private final AppRepository appRepository;
+	private final UserRepository userRepository;
 
-	public DataInitializer(AppRepository userRepository) {
-		this.appRepository = userRepository;
+	public DataInitializer(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	@Override
 	public void run(String... args) {
 		System.out.println("saving init ... ");
-		appRepository.save(new AppUser("yj6ley", "Radhi"));
-		appRepository.save(new AppUser("YJ6LEY", "radhi"));
+		userRepository.save(new AppUser("yj6ley", "Radhi"));
+		userRepository.save(new AppUser("YJ6LEY", "radhi"));
 	}
 }
 
