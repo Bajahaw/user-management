@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class AppRepository {
+public class UserRepository {
     private final Map<String, AppUser> users = new HashMap<>();
 
     public void save(AppUser user) {
-        users.put(user.username(), user);
+        users.put(user.getUsername() , user);
     }
 
     public AppUser getUserByName(String username) {

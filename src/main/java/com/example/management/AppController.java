@@ -1,6 +1,5 @@
 package com.example.management;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -8,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AppController {
-    private final AppRepository appRepository;
+    private final UserRepository userRepository;
     private final AppService appService;
 
-    public AppController(AppRepository appRepository, AppService appService){
-        this.appRepository = appRepository;
+    public AppController(UserRepository userRepository, AppService appService){
+        this.userRepository = userRepository;
         this.appService = appService;
     }
 
@@ -34,7 +33,7 @@ public class AppController {
 
         System.out.println("user: "+user.username() + " --> pass:" + user.password());
 
-        AppUser appUser = appRepository.getUserByName(user.username());
+        AppUser appUser = userRepository.getUserByName(user.username());
         if (appUser == null || !appUser.password().equals(user.password()))
             return ResponseEntity.notFound().build();
         return ResponseEntity.status(HttpStatus.FOUND).header("Location", "/login/" + user.username()).build();
@@ -47,7 +46,7 @@ public class AppController {
 
     @PutMapping("/add")
     public ResponseEntity<String> addUser(@RequestBody AppUser user){
-        appRepository.save(user);
+        userRepository.save(user);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body("User created");
