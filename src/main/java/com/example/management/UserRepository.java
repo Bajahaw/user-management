@@ -13,7 +13,7 @@ public class UserRepository {
         users.put(user.getUsername() , user);
     }
 
-    public AppUser getUserByUsername(String username) {
+    public AppUser findByUsername(String username) {
         return users.get(username);
     }
 }

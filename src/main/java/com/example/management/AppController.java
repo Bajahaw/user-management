@@ -33,7 +33,7 @@ public class AppController {
 
         System.out.println("user: "+user.getUsername() + " --> pass:" + user.getPassword());
 
-        AppUser appUser = userRepository.getUserByUsername(user.getUsername());
+        AppUser appUser = userRepository.findByUsername(user.getUsername());
         if (appUser == null || !appUser.getPassword().equals(user.getPassword()))
             return ResponseEntity.notFound().build();
         return ResponseEntity.status(HttpStatus.FOUND).header("Location", "/login/" + user.getUsername()).build();

@@ -18,7 +18,7 @@ public class AppConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.getUserByUsername(username);
+        return username -> userRepository.findByUsername(username);
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {
