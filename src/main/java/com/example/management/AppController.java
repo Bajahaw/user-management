@@ -31,12 +31,12 @@ public class AppController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AppUser user){
 
-        System.out.println("user: "+user.username() + " --> pass:" + user.password());
+        System.out.println("user: "+user.getUsername() + " --> pass:" + user.getPassword());
 
-        AppUser appUser = userRepository.getUserByName(user.username());
-        if (appUser == null || !appUser.password().equals(user.password()))
+        AppUser appUser = userRepository.getUserByUsername(user.getUsername());
+        if (appUser == null || !appUser.getPassword().equals(user.getPassword()))
             return ResponseEntity.notFound().build();
-        return ResponseEntity.status(HttpStatus.FOUND).header("Location", "/login/" + user.username()).build();
+        return ResponseEntity.status(HttpStatus.FOUND).header("Location", "/login/" + user.getUsername()).build();
     }
 
     @GetMapping("/logout")
