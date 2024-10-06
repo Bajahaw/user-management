@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS USER_TABLE;
+CREATE TABLE USER_TABLE(
+  ID INT NOT NULL AUTO_INCREMENT,
+  NAME VARCHAR(100) NOT NULL,
+  USERNAME VARCHAR(100) NOT NULL,
+  PASSWORD VARCHAR(100) NOT NULL,
+  PRIMARY KEY (ID));
+
+INSERT INTO USER_TABLE (NAME, EMAIL, PASSWORD) VALUES
+    ('Alice', 'alice@mail.co', 'password'),
+    ('Bob', 'bob@mail.co', 'password'),
+    ('John', 'John.Doe@mail.co', 'password');

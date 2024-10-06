@@ -2,6 +2,7 @@ package com.example.management;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,12 +14,15 @@ import java.util.List;
 // @Entity
 public class AppUser implements UserDetails {
 
-    private Long id;
+    private int id;
+    @Getter
+    private String name;
     private String username;
     private String password;
 
-    public AppUser(Long id, String username, String password) {
+    public AppUser(int id, String username, String password, String name) {
         this.id = id;
+        this.name = name;
         this.username = username;
         this.password = password;
     }
