@@ -14,11 +14,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class AppConfig {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public AppConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username);
+        return username -> userRepository.findByUsername(username).orElseThrow();
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {
