@@ -30,14 +30,14 @@ public class AuthService {
                         authRequest.password()
                 )
         );
-        //todo: throw exception if not found
-        var user = userRepository.findByUsername(authRequest.username());
+        var user = userRepository.findByUsername(authRequest.username()).orElseThrow();
         var token = jwtService.generateToken(user);
         return new AuthResponse(token);
     }
 
     public AuthResponse register(RegisterRequest authRequest) {
         var user = AppUser.builder()
+                .name(authRequest.name())
                 .username(authRequest.username())
                 .password(passwordEncoder.encode(authRequest.password()))
                 .build();

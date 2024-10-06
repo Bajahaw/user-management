@@ -1,8 +1,10 @@
 package com.example.management;
 
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,16 +13,21 @@ import java.util.Collection;
 import java.util.List;
 
 @Builder
-// @Entity
+@Table("USER_TABLE")
 public class AppUser implements UserDetails {
 
-    private int id;
+    @Id
+    private Integer id;
+
     @Getter
     private String name;
+
+    @Email
     private String username;
+
     private String password;
 
-    public AppUser(int id, String username, String password, String name) {
+    public AppUser(Integer id, String name, String username, String password) {
         this.id = id;
         this.name = name;
         this.username = username;
