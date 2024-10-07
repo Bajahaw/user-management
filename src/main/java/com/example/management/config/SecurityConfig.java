@@ -11,8 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -33,7 +31,7 @@ public class SecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/api/v1/auth/**", "/h2-console/**")
+                                .requestMatchers("/api/v1/auth/**", "/h2-console/**", "/login", "/signup")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -42,7 +40,6 @@ public class SecurityConfig {
                         session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .formLogin(withDefaults())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
