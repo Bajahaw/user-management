@@ -1,5 +1,9 @@
 package com.example.management;
 
+import com.example.management.auth.AuthRequest;
+import com.example.management.auth.AuthResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,24 +21,15 @@ public class AppController {
     public String index() {
         return "forward:index.html";
     }
+
     @GetMapping("/login/{userId}")
     public String user(@PathVariable String userId) {
         return "forward:/views/homepage.html";
     }
+
     @GetMapping("/signup")
     public String signup() {
         return "forward:/views/signup.html";
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AppUser user){
-
-        System.out.println("user: "+user.getUsername() + " --> pass:" + user.getPassword());
-
-        AppUser appUser = appService.getUser(user.getUsername());
-        if (appUser == null || !appUser.getPassword().equals(user.getPassword()))
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.status(HttpStatus.FOUND).header("Location", "/login/" + user.getUsername()).build();
     }
 
     @GetMapping("/logout")
@@ -42,11 +37,13 @@ public class AppController {
         return ResponseEntity.ok("Bye you're out");
     }
 
-    @PutMapping("/add")
-    public ResponseEntity<String> addUser(@RequestBody AppUser user){
-        appService.addUser(user);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("User created");
+    @PostMapping("/perform_login")
+    public AuthResponse performLogin(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
+        String token = appService.performLogin(authRequest);
+        Cookie jwtCookie = new Cookie("JWT", token);
+        jwtCookie.setHttpOnly(true); // Prevent access from JavaScript
+        jwtCookie.setPath("/"); // Make cookie available to all paths
+        response.addCookie(jwtCookie);
+        return new AuthResponse(token);
     }
 }

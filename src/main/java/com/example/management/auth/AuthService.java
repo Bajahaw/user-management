@@ -23,7 +23,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public AuthResponse authenticate(AuthRequest authRequest) {
+    public String authenticate(AuthRequest authRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authRequest.username(),
@@ -31,8 +31,7 @@ public class AuthService {
                 )
         );
         var user = userRepository.findByUsername(authRequest.username()).orElseThrow();
-        var token = jwtService.generateToken(user);
-        return new AuthResponse(token);
+        return jwtService.generateToken(user);
     }
 
     public AuthResponse register(RegisterRequest authRequest) {

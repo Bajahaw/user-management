@@ -1,5 +1,6 @@
 package com.example.management.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,17 +25,23 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, HttpServletRequest httpServletRequest) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/api/v1/auth/**", "/h2-console/**", "/login", "/signup")
+                                .requestMatchers("/api/v1/auth/**", "/h2-console/**", "/login", "/signup","/views/signup.html", "/index.html")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/perform_login")
+                        .defaultSuccessUrl("/login/user", true)
+                        .failureUrl("/login?error=true")
                 )
                 .sessionManagement(session ->
                         session
