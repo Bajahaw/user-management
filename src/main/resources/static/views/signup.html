@@ -9,7 +9,7 @@
 <body>
 <div class="d-flex row justify-content-center align-items-center vh-100">
   <div class="d-flex flex-column justify-content-center align-items-center w-75">
-    <form id="userForm" class="w-25">
+    <form id="userForm" class="w-25" action="/api/v1/auth/register" method="post">
       <div class="form-group mb-2">
         <label for="name">Name</label>
         <input id="name" class="form-control" name="username" type="text">
@@ -24,7 +24,7 @@
         <label for="password">Password</label>
         <input id="password" class="form-control mb-2" name="password" type="password">
       </div>
-      <div class="form-group text-muted">
+      <div class="form-group text-muted mb-2">
         <input type="checkbox" class="form-check-input" id="terms"><small>Agree to all terms*</small>
       </div>
       <div class="d-flex">
@@ -32,7 +32,7 @@
       </div>
     </form>
     <small id="signup" class="text-muted w-25 mb-5" >don't have an account yet? <a id="signup" href="/signup" class="text-muted"> sign up here </small> </a>
-    <div id="state" class="d-flex justify-content-center h1">heloo world</div>
+    <div id="state" class="d-flex justify-content-center h1">Stats here .. </div>
     <script src="main.js"></script>
   </div>
 </div>
