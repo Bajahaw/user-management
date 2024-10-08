@@ -1,10 +1,8 @@
 package com.example.management.auth;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -16,8 +14,8 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest authRequest) {
+    @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<AuthResponse> authenticate(@ModelAttribute AuthRequest authRequest) {
         return ResponseEntity.ok(new AuthResponse(authService.authenticate(authRequest)));
     }
 

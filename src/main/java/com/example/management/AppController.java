@@ -5,6 +5,7 @@ import com.example.management.auth.AuthResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +38,8 @@ public class AppController {
         return ResponseEntity.ok("Bye you're out");
     }
 
-    @PostMapping("/perform_login")
-    public AuthResponse performLogin(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
+    @PostMapping(value = "/perform_login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public AuthResponse performLogin(@ModelAttribute AuthRequest authRequest, HttpServletResponse response) {
         String token = appService.performLogin(authRequest);
         Cookie jwtCookie = new Cookie("JWT", token);
         jwtCookie.setHttpOnly(true); // Prevent access from JavaScript
