@@ -1,6 +1,5 @@
 package com.example.management.auth;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +13,8 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<AuthResponse> authenticate(@ModelAttribute AuthRequest authRequest) {
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest authRequest) {
         return ResponseEntity.ok(new AuthResponse(authService.authenticate(authRequest)));
     }
 
@@ -23,5 +22,4 @@ public class AuthController {
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest authRequest) {
         return ResponseEntity.ok(authService.register(authRequest));
     }
-
 }
