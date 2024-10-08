@@ -32,16 +32,18 @@ public class SecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/api/v1/auth/**", "/h2-console/**", "/login", "/signup","/views/signup.html", "/index.html")
+                                .requestMatchers("/api/v1/auth/**", "/h2-console/**", "/login", "/signup","/views/signup.html", "/index.html", "/main.js")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/perform_login")
-                        .defaultSuccessUrl("/login/user", true)
                         .failureUrl("/login?error=true")
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/api/v1/auth/authenticate")
+                        .logoutSuccessUrl("/login")
                 )
                 .sessionManagement(session ->
                         session

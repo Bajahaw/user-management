@@ -1,79 +1,31 @@
-// const btn = document.getElementById('btn');
-// const user= document.getElementById('username');
-// const pass= document.getElementById('password');
-// const signUp = document.getElementById('signup');
+const login_btn = document.getElementById('btn');
+const signup_btn = document.getElementById('signup');
+const logout_btn = document.getElementById('loguot');
+const form = document.getElementById('userForm');
 
-//const xmlhttp = new XMLHttpRequest();
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    fetch('/api/v1/auth/authenticate', {
+        method: 'POST', body: new FormData(form),
+    })
+        .then(response => response.json())
+        .then(data => {
+            let token = data.token;
+            localStorage.setItem('jwt', token);
+            home();
+        });
+});
 
-// function login(xmlhttp){
-//     xmlhttp.open("POST", "/login");
-//     xmlhttp.setRequestHeader('Content-Type', 'application/json');
-//     const credentials = JSON.stringify({username: user.value, password: pass.value});
-//     xmlhttp.send(credentials);
-//     xmlhttp.onload = function() {
-//         let state = document.getElementById('state');
-//         state.innerHTML = this.response;
-//
-//         // if (this.status === 200){
-//         //     window.history.pushState({}, '', '/user');
-//         //     btn.innerHTML = 'LogOut';
-//         //     btn.style.background = 'red';
-//         //     user.value = '';
-//         //     pass.value = '';
-//         // }
-//         if (this.status === 302) {
-//             window.location.href = this.getResponseHeader('Location');
-//         }
-//         else if (this.status === 404){
-//             state.innerHTML = 'Wrong email or password';
-//             pass.value = '';
-//         }
-//     }
-// }
-// function logout(xmlhttp){
-//     xmlhttp.open("GET", "/logout");
-//     xmlhttp.send();
-//     xmlhttp.onload = function (){
-//         document.getElementById('state').innerHTML =
-//             this.response;
-//         if (this.status === 200){
-//             window.history.pushState({}, '', '/login');
-//             btn.innerHTML = 'LogIn';
-//             btn.style.background = '';
-//         }
-//     }
-// }
-// function signup(xmlhttp){
-//     xmlhttp.open("PUT", "/add");
-//     xmlhttp.setRequestHeader('Content-Type', 'application/json');
-//     const credentials = JSON.stringify({username: user.value, password: pass.value});
-//     xmlhttp.send(credentials);
-//     xmlhttp.onload = function() {
-//         let state = document.getElementById('state');
-//         state.innerHTML = this.response;
-//
-//         if (this.status === 200){
-//             window.history.pushState({}, '', '/login');
-//             btn.innerHTML = 'LogIn';
-//             user.value = '';
-//             pass.value = '';
-//         }
-//     }
-// }
-
-
-// btn.addEventListener('click', (event) => {
-//     event.preventDefault();
-//     if (btn.textContent === 'LogIn') {
-//         login(xmlhttp);
-//     } else if(btn.textContent === 'LogOut'){
-//         logout(xmlhttp);
-//     } else {
-//         signup(xmlhttp);
-//     }
-// });
-// signUp.addEventListener('click', (evt)=>{
-//     evt.preventDefault();
-//     window.history.pushState({}, '', '/signup   ');
-//     btn.innerHTML = 'SignUp';
-// });
+function home() {
+    fetch('/home', {
+        method: 'GET', headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`, 'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.text())
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+        });
+}
