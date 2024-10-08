@@ -4,7 +4,6 @@ import com.example.management.auth.AuthRequest;
 import com.example.management.auth.AuthResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,8 +22,8 @@ public class AppController {
         return "forward:index.html";
     }
 
-    @GetMapping("/login/{userId}")
-    public String user(@PathVariable String userId) {
+    @GetMapping("/home")
+    public String user() {
         return "forward:/views/homepage.html";
     }
 
@@ -36,15 +35,5 @@ public class AppController {
     @GetMapping("/logout")
     public ResponseEntity<String> logout(){
         return ResponseEntity.ok("Bye you're out");
-    }
-
-    @PostMapping(value = "/perform_login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public AuthResponse performLogin(@ModelAttribute AuthRequest authRequest, HttpServletResponse response) {
-        String token = appService.performLogin(authRequest);
-        Cookie jwtCookie = new Cookie("JWT", token);
-        jwtCookie.setHttpOnly(true); // Prevent access from JavaScript
-        jwtCookie.setPath("/"); // Make cookie available to all paths
-        response.addCookie(jwtCookie);
-        return new AuthResponse(token);
     }
 }
