@@ -14,13 +14,20 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
         },
         body: JSON.stringify(form_to_json(registerForm))
     })
-        .then(response => response.json())
-        .then(data => {
-            let token = data.token;
-            localStorage.setItem('jwt', token);
-            window.location.href = '/login';
+        .then(response => {
+            if (!response.ok){
+                alert(response.text);
+            }
+            else response.json()
+                .then(data => {
+                    let token = data.token;
+                    localStorage.setItem('jwt', token);
+                    home();
+                });
         });
+
 });
+
 if (form) form.addEventListener('submit', (event) => {
     event.preventDefault();
     fetch('/api/v1/auth/authenticate', {
@@ -30,11 +37,16 @@ if (form) form.addEventListener('submit', (event) => {
         },
         body: JSON.stringify(form_to_json(form))
     })
-        .then(response => response.json())
-        .then(data => {
-            let token = data.token;
-            localStorage.setItem('jwt', token);
-            home();
+        .then(response => {
+            if (!response.ok){
+                alert(response.text);
+            }
+            else response.json()
+                .then(data => {
+                    let token = data.token;
+                    localStorage.setItem('jwt', token);
+                    home();
+                });
         });
 });
 
@@ -61,3 +73,4 @@ function form_to_json(form) {
     });
     return data;
 }
+
