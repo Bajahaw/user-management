@@ -38,6 +38,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .loginProcessingUrl("/api/v1/auth/authenticate")
                         .failureUrl("/login?error=true")
                 )
                 .logout(logout -> logout

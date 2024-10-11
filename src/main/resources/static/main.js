@@ -15,10 +15,9 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
         body: JSON.stringify(form_to_json(registerForm))
     })
         .then(response => {
-            if (!response.ok){
+            if (!response.ok) {
                 alert(response.text);
-            }
-            else response.json()
+            } else response.json()
                 .then(data => {
                     let token = data.token;
                     localStorage.setItem('jwt', token);
@@ -35,18 +34,19 @@ if (form) form.addEventListener('submit', (event) => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(form_to_json(form))
+        body: JSON.stringify(form_to_json(form)),
+        redirect: "follow"
     })
         .then(response => {
-            if (!response.ok){
-                alert(response.text);
+            if (!response.redirected) {
+                response.json()
+                    .then(data => {
+                        let token = data.token;
+                        localStorage.setItem('jwt', token);
+                        home();
+                    });
             }
-            else response.json()
-                .then(data => {
-                    let token = data.token;
-                    localStorage.setItem('jwt', token);
-                    home();
-                });
+            else window.location.href = response.url;
         });
 });
 
