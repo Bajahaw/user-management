@@ -24,22 +24,23 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwtService) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("api/v1/auth/**", "/h2-console/**", "/login", "/signup","/views/signup.html", "/index.html", "/main.js", "favicon.ico")
+                                .requestMatchers("api/v1/auth/**", "/h2-console/**", "/login", "/signup","/views/signup.html", "/index.html", "/main.js", "/favicon.ico")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/api/v1/auth/authenticate")
                         .failureUrl("/login?error=true")
+                        .successHandler(new JwtAuthenticationSuccessHandler(jwtService))
+                        // todo: implement jsonAuthFilter
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout")

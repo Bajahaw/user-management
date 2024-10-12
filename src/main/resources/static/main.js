@@ -21,7 +21,7 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
                 .then(data => {
                     let token = data.token;
                     localStorage.setItem('jwt', token);
-                    home();
+                    // home();
                 });
         });
 
@@ -29,12 +29,9 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
 
 if (form) form.addEventListener('submit', (event) => {
     event.preventDefault();
-    fetch('/api/v1/auth/authenticate', {
+    fetch('/login', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(form_to_json(form)),
+        body: new FormData(form),
         redirect: "follow"
     })
         .then(response => {
@@ -43,7 +40,7 @@ if (form) form.addEventListener('submit', (event) => {
                     .then(data => {
                         let token = data.token;
                         localStorage.setItem('jwt', token);
-                        home();
+                        // home();
                     });
             }
             else window.location.href = response.url;
