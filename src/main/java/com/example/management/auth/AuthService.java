@@ -5,7 +5,9 @@ import com.example.management.UserRepository;
 import com.example.management.config.JwtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,18 @@ public class AuthService {
 
     public String authenticate(AuthRequest authRequest) {
         log.warn("Authenticating user: {}", authRequest.username());
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authRequest.username(),
-                        authRequest.password()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            authRequest.username(),
+                            authRequest.password()
+                    )
+            );
+        } catch (AuthenticationException e) {
+            log.error("Invalid username/password supplied");
+            throw new BadCredentialsException("Invalid username/password supplied");
+        }
+
         var user = userRepository.findByUsername(authRequest.username()).orElseThrow();
         log.warn("User authenticated: {}", user.getName());
         return jwtService.generateToken(user);
