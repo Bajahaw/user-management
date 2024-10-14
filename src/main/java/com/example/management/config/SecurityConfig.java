@@ -38,7 +38,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .failureUrl("/login?error=true")
+                        .failureHandler(new JwtAuthenticationFailureHandler())
                         .successHandler(new JwtAuthenticationSuccessHandler(jwtService))
                         // todo: implement jsonAuthFilter
                 )

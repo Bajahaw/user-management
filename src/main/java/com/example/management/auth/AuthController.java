@@ -1,5 +1,6 @@
 package com.example.management.auth;
 
+import jakarta.security.auth.message.AuthException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,11 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<String> handleAuthException(AuthException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @PostMapping("/authenticate")

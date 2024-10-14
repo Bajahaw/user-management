@@ -35,7 +35,7 @@ if (form) form.addEventListener('submit', (event) => {
         redirect: "follow"
     })
         .then(response => {
-            if (!response.redirected) {
+            if (response.headers.get('Content-Type') === 'application/json') {
                 response.json()
                     .then(data => {
                         let token = data.token;
@@ -43,7 +43,10 @@ if (form) form.addEventListener('submit', (event) => {
                         // home();
                     });
             }
-            else window.location.href = response.url;
+            else response.text()
+                .then(response => {
+                    document.getElementById('state').innerText = response
+                });
         });
 });
 
