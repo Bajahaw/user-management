@@ -21,7 +21,7 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
                 .then(data => {
                     let token = data.token;
                     localStorage.setItem('jwt', token);
-                    // home();
+                    home();
                 });
         });
 
@@ -35,12 +35,12 @@ if (form) form.addEventListener('submit', (event) => {
         redirect: "follow"
     })
         .then(response => {
-            if (response.headers.get('Content-Type') === 'application/json') {
+                if (response.headers.get('Content-Type').startsWith('application/json')) {
                 response.json()
                     .then(data => {
                         let token = data.token;
                         localStorage.setItem('jwt', token);
-                        // home();
+                        home();
                     });
             }
             else response.text()
