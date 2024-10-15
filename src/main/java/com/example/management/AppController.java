@@ -17,9 +17,14 @@ public class AppController {
         this.appService = appService;
     }
 
-    @GetMapping("/login")
+    @GetMapping
     public String index() {
         return "forward:index.html";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "forward:/views/auth/login.html";
     }
 
     @GetMapping("/home")
@@ -29,7 +34,7 @@ public class AppController {
 
     @GetMapping("/signup")
     public String signup() {
-        return "forward:/views/signup.html";
+        return "forward:/views/auth/signup.html";
     }
 
     @GetMapping("/logout")
