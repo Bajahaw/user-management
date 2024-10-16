@@ -21,7 +21,7 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
                 .then(data => {
                     let token = data.token;
                     localStorage.setItem('jwt', token);
-                    home();
+                    home(data);
                 });
         });
 
@@ -40,7 +40,7 @@ if (form) form.addEventListener('submit', (event) => {
                     .then(data => {
                         let token = data.token;
                         localStorage.setItem('jwt', token);
-                        home();
+                        home(data);
                     });
             }
             else response.text()
@@ -50,7 +50,7 @@ if (form) form.addEventListener('submit', (event) => {
         });
 });
 
-function home() {
+function home(data) {
     fetch('/home', {
         method: 'GET', headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`, 'Content-Type': 'application/json'
@@ -58,9 +58,11 @@ function home() {
     })
         .then(response => response.text())
         .then(html => {
-            history.pushState(null, '', '/home');
+            history.pushState(null, '', `/${data.user.username}`);
             document.open();
             document.write(html);
+            document.getElementById('email').innerText = data.user.username;
+            document.getElementById('user').innerText = data.user.name;
             document.close();
         });
 }
