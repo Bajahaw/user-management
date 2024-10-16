@@ -1,3 +1,5 @@
 package com.example.management.auth;
 
-public record AuthResponse(String token) {}
+import com.example.management.AppUser;
+
+public record AuthResponse(AppUser user, String token) {}

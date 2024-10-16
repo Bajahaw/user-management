@@ -1,5 +1,8 @@
 package com.example.management.config;
 
+import com.example.management.AppUser;
+import com.example.management.auth.AuthResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,8 +14,10 @@ import java.io.IOException;
 
 public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     JwtService jwtService;
+    ObjectMapper objectMapper;
     public JwtAuthenticationSuccessHandler(JwtService jwtService) {
         this.jwtService = jwtService;
+        this.objectMapper = new ObjectMapper();
     }
 
     @Override
@@ -22,7 +27,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
         String token = jwtService.generateToken(user);
 
         response.setContentType("application/json");
-        response.getWriter().write("{\"token\": \"" + token + "\"}");
+        response.getWriter().write(objectMapper.writeValueAsString(new AuthResponse((AppUser) user, token)));
         response.getWriter().flush();
 
         //        response.sendRedirect("/home");

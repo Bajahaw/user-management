@@ -1,7 +1,7 @@
 package com.example.management.config;
 
 import com.example.management.UserRepository;
-import com.example.management.exceptions.UserDeosNotExistException;
+import com.example.management.exceptions.UserDoesNotExistException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +23,7 @@ public class AppConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username).orElseThrow(() -> new UserDeosNotExistException("User does not exist"));
+        return username -> userRepository.findByUsername(username).orElseThrow(() -> new UserDoesNotExistException("User does not exist"));
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {

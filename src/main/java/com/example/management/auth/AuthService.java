@@ -27,7 +27,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public String authenticate(AuthRequest authRequest) {
+    public AuthResponse authenticate(AuthRequest authRequest) {
         log.warn("Authenticating user: {}", authRequest.username());
         try {
             authenticationManager.authenticate(
@@ -43,7 +43,8 @@ public class AuthService {
 
         var user = userRepository.findByUsername(authRequest.username()).orElseThrow();
         log.warn("User authenticated: {}", user.getName());
-        return jwtService.generateToken(user);
+        var token = jwtService.generateToken(user);
+        return new AuthResponse(user, token);
     }
 
     public AuthResponse register(RegisterRequest authRequest) {
@@ -55,6 +56,6 @@ public class AuthService {
         userRepository.save(user);
         var token = jwtService.generateToken(user);
         log.info("User registered: {}", user.getName());
-        return new AuthResponse(token);
+        return new AuthResponse(user, token);
     }
 }

@@ -1,7 +1,5 @@
 package com.example.management;
 
-import com.example.management.auth.AuthRequest;
-import com.example.management.auth.AuthResponse;
 import com.example.management.auth.AuthService;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +19,5 @@ public class AppService {
 
     public void addUser(AppUser user) {
         userRepository.save(user);
-    }
-
-    public String performLogin(AuthRequest authRequest) {
-        return authService.authenticate(authRequest);
     }
 }
