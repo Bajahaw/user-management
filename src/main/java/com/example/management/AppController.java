@@ -1,23 +1,15 @@
 package com.example.management;
 
-import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AppController {
     private final AppService appService;
-    Logger log = org.slf4j.LoggerFactory.getLogger(AppController.class);
 
     public AppController(AppService appService){
         this.appService = appService;
-    }
-
-    @ExceptionHandler(AuthenticationException.class)
-    public void handleException(Exception e){
-        log.error(e.getMessage());
     }
 
     @GetMapping
