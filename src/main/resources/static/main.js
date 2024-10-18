@@ -15,13 +15,17 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
         body: JSON.stringify(form_to_json(registerForm))
     })
         .then(response => {
-            if (!response.ok) {
-                alert(response.text);
-            } else response.json()
-                .then(data => {
-                    let token = data.token;
-                    localStorage.setItem('jwt', token);
-                    home(data);
+            if (response.headers.get('Content-Type').startsWith('application/json')) {
+                response.json()
+                    .then(data => {
+                        let token = data.token;
+                        localStorage.setItem('jwt', token);
+                        home(data);
+                    });
+            }
+            else response.text()
+                .then(response => {
+                    document.getElementById('state').innerText = response
                 });
         });
 
