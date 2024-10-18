@@ -1,5 +1,12 @@
 package com.example.management.auth;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
-public record AuthRequest (String username, String password) {}
+public record AuthRequest (@Email(message = "Invalid email")
+                           @NotBlank(message = "Empty email")
+                           String username,
+                           @NotBlank(message = "Empty Password")
+                           String password) {}

@@ -1,6 +1,7 @@
 package com.example.management;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -20,11 +21,14 @@ public class AppUser implements UserDetails {
     private Integer id;
 
     @Getter
+    @NotBlank(message = "Empty name")
     private String name;
 
-    @Email
+    @Email(message = "Invalid email")
+    @NotBlank(message = "Empty email")
     private String username;
 
+    @NotBlank(message = "Empty password")
     private String password;
 
     public AppUser(Integer id, String name, String username, String password) {

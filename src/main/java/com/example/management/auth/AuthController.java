@@ -1,6 +1,6 @@
 package com.example.management.auth;
 
-import jakarta.security.auth.message.AuthException;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,18 +14,14 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @ExceptionHandler(AuthException.class)
-    public ResponseEntity<String> handleAuthException(AuthException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest authRequest) {
+        System.out.println("Authenticating user: " + authRequest.username());
         return ResponseEntity.ok(authService.authenticate(authRequest));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 }
