@@ -1,4 +1,4 @@
-package com.example.management;
+package com.example.management.user;
 
 import org.springframework.data.repository.Repository;
 

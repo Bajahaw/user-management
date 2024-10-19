@@ -1,8 +1,8 @@
 package com.example.management.auth;
 
-import com.example.management.AppUser;
-import com.example.management.UserRepository;
-import com.example.management.config.JwtService;
+import com.example.management.user.AppUser;
+import com.example.management.user.UserRepository;
+import com.example.management.jwt.JwtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

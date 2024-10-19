@@ -1,4 +1,4 @@
-package com.example.management;
+package com.example.management.exceptions;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;

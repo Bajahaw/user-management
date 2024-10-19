@@ -1,5 +1,7 @@
-package com.example.management;
+package com.example.management.app;
 
+import com.example.management.user.AppUser;
+import com.example.management.user.UserRepository;
 import com.example.management.auth.AuthService;
 import org.springframework.stereotype.Service;
 

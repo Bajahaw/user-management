@@ -1,6 +1,6 @@
-package com.example.management.config;
+package com.example.management.jwt;
 
-import com.example.management.AppUser;
+import com.example.management.user.AppUser;
 import com.example.management.auth.AuthResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

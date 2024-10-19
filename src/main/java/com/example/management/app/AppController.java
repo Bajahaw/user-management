@@ -1,4 +1,4 @@
-package com.example.management;
+package com.example.management.app;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

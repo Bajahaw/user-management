@@ -1,6 +1,6 @@
-package com.example.management.config;
+package com.example.management.app;
 
-import com.example.management.UserRepository;
+import com.example.management.user.UserRepository;
 import com.example.management.exceptions.UserDoesNotExistException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.example.management.config;
+package com.example.management.jwt;
 
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
