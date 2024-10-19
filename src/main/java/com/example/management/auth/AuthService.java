@@ -1,6 +1,7 @@
 package com.example.management.auth;
 
 import com.example.management.user.AppUser;
+import com.example.management.user.UserDTO;
 import com.example.management.user.UserRepository;
 import com.example.management.jwt.JwtService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +43,10 @@ public class AuthService {
         }
 
         var user = userRepository.findByUsername(authRequest.username()).orElseThrow();
-        log.warn("User authenticated: {}", user.getName());
         var token = jwtService.generateToken(user);
-        return new AuthResponse(user, token);
+        var userdto = new UserDTO(user.getName(), user.getUsername());
+        log.warn("User authenticated: {}", user.getName());
+        return new AuthResponse(userdto, token);
     }
 
     public AuthResponse register(RegisterRequest authRequest) {
@@ -55,7 +57,8 @@ public class AuthService {
                 .build();
         userRepository.save(user);
         var token = jwtService.generateToken(user);
+        var userdto = new UserDTO(user.getName(), user.getUsername());
         log.info("User registered: {}", user.getName());
-        return new AuthResponse(user, token);
+        return new AuthResponse(userdto, token);
     }
 }
