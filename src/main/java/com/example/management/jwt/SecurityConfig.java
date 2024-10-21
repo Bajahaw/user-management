@@ -24,7 +24,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwtService) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            JsonUsernamePasswordAuthFilter jsonUsernamePasswordAuthFilter,
+            JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler,
+            JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler
+            ) throws Exception {
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
@@ -38,8 +44,8 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .failureHandler(new JwtAuthenticationFailureHandler())
-                        .successHandler(new JwtAuthenticationSuccessHandler(jwtService))
+                        .failureHandler(jwtAuthenticationFailureHandler)
+                        .successHandler(jwtAuthenticationSuccessHandler)
                         // todo: implement jsonAuthFilter
                 )
                 .logout(logout -> logout
@@ -51,7 +57,9 @@ public class SecurityConfig {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jsonUsernamePasswordAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, jsonUsernamePasswordAuthFilter.getClass());
+
         return http.build();
     }
 }

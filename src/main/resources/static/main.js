@@ -35,7 +35,10 @@ if (form) form.addEventListener('submit', (event) => {
     event.preventDefault();
     fetch('/login', {
         method: 'POST',
-        body: new FormData(form),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form_to_json(form)),
         redirect: "follow"
     })
         .then(response => {
