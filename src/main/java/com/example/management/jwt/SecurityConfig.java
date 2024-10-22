@@ -46,7 +46,6 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .failureHandler(jwtAuthenticationFailureHandler)
                         .successHandler(jwtAuthenticationSuccessHandler)
-                        // todo: implement jsonAuthFilter
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout")
