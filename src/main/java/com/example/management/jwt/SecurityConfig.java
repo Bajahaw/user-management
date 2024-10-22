@@ -26,9 +26,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            JsonUsernamePasswordAuthFilter jsonUsernamePasswordAuthFilter,
-            JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler,
-            JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler
+            JsonUsernamePasswordAuthFilter jsonUsernamePasswordAuthFilter
             ) throws Exception {
 
         http
@@ -44,8 +42,6 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .failureHandler(jwtAuthenticationFailureHandler)
-                        .successHandler(jwtAuthenticationSuccessHandler)
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout")
@@ -56,7 +52,7 @@ public class SecurityConfig {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jsonUsernamePasswordAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(jsonUsernamePasswordAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, jsonUsernamePasswordAuthFilter.getClass());
 
         return http.build();
