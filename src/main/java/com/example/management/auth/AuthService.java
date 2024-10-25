@@ -38,8 +38,8 @@ public class AuthService {
                     )
             );
         } catch (AuthenticationException e) {
-            log.error("Invalid username/password supplied");
-            throw new BadCredentialsException("Invalid username/password supplied");
+            log.error("Incorrect username/password supplied");
+            throw new BadCredentialsException("Incorrect username/password supplied");
         }
 
         var user = userRepository.findByUsername(authRequest.username()).orElseThrow();
