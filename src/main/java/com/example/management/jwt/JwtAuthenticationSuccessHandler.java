@@ -1,7 +1,7 @@
 package com.example.management.jwt;
 
-import com.example.management.user.AppUser;
 import com.example.management.auth.AuthResponse;
+import com.example.management.user.AppUser;
 import com.example.management.user.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -25,14 +25,17 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        AppUser user = (AppUser) authentication.getPrincipal();
-        UserDTO userDTO = new UserDTO(user.getName(), user.getUsername());
-        String token = jwtService.generateToken(user);
+        var principal = authentication.getPrincipal();
+        UserDTO userDTO = null;
+        String token = "";
+        if (principal instanceof AppUser user) {
+            userDTO = new UserDTO(user.getName(), user.getUsername());
+            token = jwtService.generateToken(user);
+        }
 
         response.setContentType("application/json");
         response.getWriter().write(objectMapper.writeValueAsString(new AuthResponse(userDTO, token)));
         response.getWriter().flush();
 
-        //        response.sendRedirect("/home");
     }
 }
