@@ -9,6 +9,11 @@
 <body>
 <div class="d-flex row justify-content-center align-items-center vh-100">
   <div class="d-flex flex-column justify-content-center align-items-center w-75">
+    <div id="state"
+         class="text-danger border border-danger rounded bg-danger-subtle  p-2 w-25 mb-2"
+         style="visibility: hidden; position: absolute">
+    </div>
+
     <form id="userForm" class="w-25">
       <div class="form-group mb-2">
         <label for="username">Email</label>
@@ -25,7 +30,6 @@
       </div>
     </form>
     <small class="text-muted w-25 mb-5" >don't have an account yet? <a href="/signup" class="text-muted"> sign up here</a></small>
-    <div id="state" class="d-flex justify-content-center h1">Stats here .. </div>
     <script src="../../main.js"></script>
   </div>
 </div>

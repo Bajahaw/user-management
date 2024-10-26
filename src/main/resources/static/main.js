@@ -4,6 +4,7 @@
 const form = document.getElementById('userForm');
 const registerForm = document.getElementById('registerForm');
 
+
 if (registerForm) registerForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
@@ -22,10 +23,9 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
                         localStorage.setItem('jwt', token);
                         home(data);
                     });
-            }
-            else response.text()
+            } else response.text()
                 .then(response => {
-                    document.getElementById('state').innerText = response
+                    setAlertMessage(response);
                 });
         });
 
@@ -42,17 +42,16 @@ if (form) form.addEventListener('submit', (event) => {
         redirect: "follow"
     })
         .then(response => {
-                if (response.headers.get('Content-Type').startsWith('application/json')) {
+            if (response.headers.get('Content-Type').startsWith('application/json')) {
                 response.json()
                     .then(data => {
                         let token = data.token;
                         localStorage.setItem('jwt', token);
                         home(data);
                     });
-            }
-            else response.text()
+            } else response.text()
                 .then(response => {
-                    document.getElementById('state').innerText = response
+                    setAlertMessage(response);
                 });
         });
 });
@@ -81,5 +80,16 @@ function form_to_json(form) {
         data[key] = value;
     });
     return data;
+}
+
+function setAlertMessage(response) {
+    const message = document.getElementById('state');
+    message.innerHTML = `
+        <ul class="mb-0">
+            ${response.split('\n').map(line => `<li>${line}</li>`).join(``)}
+        </ul>
+    `;
+    message.style.position = 'relative';
+    message.style.visibility = 'visible';
 }
 
