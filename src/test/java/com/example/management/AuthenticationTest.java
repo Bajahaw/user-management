@@ -7,10 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -42,7 +43,11 @@ public class AuthenticationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody))
                 .andExpect(status().isOk())
-                .andExpect(authenticated().withUsername("alice@mail.co"));
+                .andExpect(authenticated().withUsername("alice@mail.co"))
+                .andExpect(result -> {
+                    String token = result.getResponse().getContentAsString();
+                    assertTrue(token.contains("token"));
+                });
     }
 
     @Test
@@ -87,5 +92,24 @@ public class AuthenticationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody))
                 .andExpect(status().isBadRequest());
+    }
+    @Test
+    public void registerEmptyFields() throws Exception {
+        String jsonBody = """ 
+                {
+                    "name": "",
+                    "username": "",
+                    "password": ""
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    String response = result.getResponse().getContentAsString();
+                    assertTrue(response.contains("Empty"));
+                });
     }
 }
