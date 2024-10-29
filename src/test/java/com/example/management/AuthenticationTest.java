@@ -1,6 +1,9 @@
 package com.example.management;
 
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AuthenticationTest {
 
     @Autowired
@@ -31,11 +35,31 @@ public class AuthenticationTest {
     }
 
     @Test
+    @Order(1)
+    public void registerNewUser() throws Exception {
+        String jsonBody = """ 
+                {
+                    "name": "test",
+                    "username": "test@maven.git",
+                    "password": "testtest"
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String response = result.getResponse().getContentAsString();
+                    assertTrue(response.contains("token"));
+                });
+    }
+    @Test
     public void testJsonAuthentication() throws Exception {
         String jsonBody = """ 
                 {
-                    "username": "alice@mail.co",
-                    "password": "pass"
+                    "username": "test@maven.git",
+                    "password": "testtest"
                 }
                 """;
 
@@ -43,7 +67,7 @@ public class AuthenticationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody))
                 .andExpect(status().isOk())
-                .andExpect(authenticated().withUsername("alice@mail.co"))
+                .andExpect(authenticated().withUsername("test@maven.git"))
                 .andExpect(result -> {
                     String token = result.getResponse().getContentAsString();
                     assertTrue(token.contains("token"));
