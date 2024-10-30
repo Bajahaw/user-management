@@ -53,6 +53,10 @@ public class AuthenticationTest {
                     String response = result.getResponse().getContentAsString();
                     assertTrue(response.contains("token"));
                 });
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isBadRequest());
     }
     @Test
     public void testJsonAuthentication() throws Exception {
