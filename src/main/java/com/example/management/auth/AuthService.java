@@ -1,9 +1,10 @@
 package com.example.management.auth;
 
+import com.example.management.exceptions.UsernameIsTaken;
+import com.example.management.jwt.JwtService;
 import com.example.management.user.AppUser;
 import com.example.management.user.UserDTO;
 import com.example.management.user.UserRepository;
-import com.example.management.jwt.JwtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -50,6 +51,10 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest authRequest) {
+        userRepository.findByUsername(authRequest.username()).ifPresent(user -> {
+            log.error("Username already exists");
+            throw new UsernameIsTaken("Username already exists");
+        });
         var user = AppUser.builder()
                 .name(authRequest.name())
                 .username(authRequest.username())

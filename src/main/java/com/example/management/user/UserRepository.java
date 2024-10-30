@@ -32,12 +32,10 @@ public class UserRepository {
 
     public Optional<AppUser> findByUsername(String username) {
         String sql = "SELECT * FROM USER_TABLE WHERE USERNAME = ?";
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(
-                        sql,
-                        UserRepository::rowMapper,
-                        username
-                )
-        );
+        return jdbcTemplate.query(
+                sql,
+                UserRepository::rowMapper,
+                username
+        ).stream().findFirst();
     }
 }
