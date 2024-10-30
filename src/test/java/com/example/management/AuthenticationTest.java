@@ -56,7 +56,11 @@ public class AuthenticationTest {
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    String response = result.getResponse().getContentAsString();
+                    assertTrue(response.contains("Username already exists"));
+                });
     }
     @Test
     public void testJsonAuthentication() throws Exception {
