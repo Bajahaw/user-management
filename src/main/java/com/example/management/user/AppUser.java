@@ -4,8 +4,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,10 +12,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Builder
-@Table("USER_TABLE")
 public class AppUser implements UserDetails {
 
-    @Id
     private Integer id;
 
     @Getter
