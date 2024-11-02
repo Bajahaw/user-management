@@ -16,8 +16,10 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handleException(AuthenticationException e) {
+        var eStatus = e.getClass().getAnnotation(ResponseStatus.class);
+        HttpStatus status = eStatus != null? eStatus.code() : HttpStatus.UNAUTHORIZED;
         return ResponseEntity
-                .status(401)
+                .status(status)
                 .body(e.getMessage());
     }
 
