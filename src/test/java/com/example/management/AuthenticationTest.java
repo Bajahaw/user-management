@@ -144,4 +144,34 @@ public class AuthenticationTest {
                     assertTrue(response.contains("Empty"));
                 });
     }
+    @Test
+    public void captialEmail() throws Exception {
+        String jsonBody = """ 
+                {
+                    "name": "Hello",
+                    "username": "TEST@GIT.GIT",
+                    "password": "TESTtest"
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(authenticated().withUsername("test@git.git"));
+    }
+    @Test
+    public void credintialsWithSpaces() throws Exception {
+        String jsonBody = """ 
+                {
+                    "name": "Hello",
+                    "username": "credintialsWithSpaces@git.git",
+                    "password": "Test test"
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isBadRequest());
+    }
 }
