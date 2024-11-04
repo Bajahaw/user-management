@@ -157,10 +157,27 @@ public class AuthenticationTest {
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody))
-                .andExpect(authenticated().withUsername("test@git.git"));
+                .andExpect(status().isOk());
+
+        jsonBody = """ 
+                {
+                    "username": "TEST@GIT.GIT",
+                    "password": "TESTtest"
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/auth/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isOk())
+                //.andExpect(authenticated().withUsername("test@git.git")); turns out spring does not update security context in stateless
+                .andExpect(result -> {
+                    var response = result.getResponse().getContentAsString();
+                    assertTrue(response.contains("test@git.git") && response.contains("token"));
+                });
     }
     @Test
-    public void credintialsWithSpaces() throws Exception {
+    public void credentialsWithSpaces() throws Exception {
         String jsonBody = """ 
                 {
                     "name": "Hello",

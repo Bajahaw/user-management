@@ -15,4 +15,10 @@ public record RegisterRequest(
         @NotBlank(message = "Empty password")
         @Size(min = 8, max = 50, message = "Invalid password length")
         String password
-) {}
+) {
+        public RegisterRequest(String name, String username, String password){
+                this.username = username.toLowerCase().trim();
+                this.password = password.trim();
+                this.name = name.trim();
+        }
+}

@@ -14,4 +14,9 @@ public record AuthRequest (
         @NotBlank(message = "Empty Password")
         @Size(min = 8, max = 50, message = "Invalid password length")
         String password
-) {}
+) {
+        public AuthRequest(String username, String password){
+                this.username = username.toLowerCase().trim();
+                this.password = password.trim();
+        }
+}
