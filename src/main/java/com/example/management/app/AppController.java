@@ -32,6 +32,11 @@ public class AppController {
         return "forward:/views/auth/signup.html";
     }
 
+    @GetMapping("/dashboard")
+    public String dashboard(){
+        return "forward:/views/dashboard";
+    }
+
     @GetMapping("/logout")
     public ResponseEntity<String> logout(){
         return ResponseEntity.ok("Bye you're out");
