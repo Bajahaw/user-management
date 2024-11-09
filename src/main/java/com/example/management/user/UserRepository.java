@@ -32,8 +32,18 @@ public class UserRepository {
     }
 
     public void save(AppUser user) {
-        String sql = "INSERT INTO USER_TABLE (NAME, USERNAME, PASSWORD) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, user.getName(), user.getUsername(), user.getPassword());
+        String sql = "INSERT INTO USER_TABLE (NAME, USERNAME, PASSWORD, ROLES) VALUES (?, ?, ?, ?)";
+        StringBuilder roles = new StringBuilder();
+        user.getAuthorities().forEach(sga -> {
+            roles.append(sga.getAuthority());
+            roles.append(',');
+        });
+        jdbcTemplate.update(
+                sql, user.getName(),
+                user.getUsername(),
+                user.getPassword(),
+                roles
+        );
     }
 
     public Optional<AppUser> findByUsername(String username) {

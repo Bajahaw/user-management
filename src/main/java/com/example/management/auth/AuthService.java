@@ -10,8 +10,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -59,6 +62,7 @@ public class AuthService {
                 .name(registerRequest.name())
                 .username(registerRequest.username())
                 .password(passwordEncoder.encode(registerRequest.password()))
+                .authorities(List.of(new SimpleGrantedAuthority("ROLE_USER")))
                 .build();
         userRepository.save(user);
         var token = jwtService.generateToken(user);
