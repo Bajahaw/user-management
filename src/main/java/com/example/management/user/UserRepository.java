@@ -1,10 +1,12 @@
 package com.example.management.user;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Repository
@@ -21,8 +23,12 @@ public class UserRepository {
                 rs.getInt("ID"),
                 rs.getString("NAME"),
                 rs.getString("USERNAME"),
-                rs.getString("PASSWORD")
-        );
+                rs.getString("PASSWORD"),
+                Arrays
+                        .stream(rs.getString("ROLES").split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .toList()
+                );
     }
 
     public void save(AppUser user) {

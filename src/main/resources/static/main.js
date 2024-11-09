@@ -1,8 +1,10 @@
 // const login_btn = document.getElementById('btn');
 // const signup_btn = document.getElementById('signup');
 // const logout_btn = document.getElementById('loguot');
-const form = document.getElementById('userForm');
-const registerForm = document.getElementById('registerForm');
+dashboard_btn = document.getElementById('dashboard');
+form = document.getElementById('userForm');
+registerForm = document.getElementById('registerForm');
+
 
 
 if (registerForm) registerForm.addEventListener('submit', (event) => {
@@ -56,10 +58,28 @@ if (form) form.addEventListener('submit', (event) => {
         });
 });
 
+if (dashboard_btn) dashboard_btn.addEventListener('click', () => {
+    fetch('/dashboard', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+        }
+    })
+        .then(r => r.text())
+        .then(html => {
+            history.pushState(null, '', '/dashboard');
+            document.open();
+            document.write(html);
+            document.close();
+        });
+})
+
 function home(data) {
     fetch('/home', {
-        method: 'GET', headers: {
-            'Authorization': `Bearer ${localStorage.getItem('jwt')}`, 'Content-Type': 'application/json'
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+            'Content-Type': 'application/json'
         }
     })
         .then(response => response.text())
@@ -69,6 +89,8 @@ function home(data) {
             document.write(html);
             document.getElementById('email').innerText = data.user.username;
             document.getElementById('user').innerText = data.user.name;
+            if (data.user.role?.has('ADMIN'))
+                document.getElementById('dashboard').style.visibility = 'hidden';
             document.close();
         });
 }

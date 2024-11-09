@@ -45,24 +45,24 @@ public class AuthService {
 
         var user = userRepository.findByUsername(authRequest.username()).orElseThrow();
         var token = jwtService.generateToken(user);
-        var userdto = new UserDTO(user.getName(), user.getUsername());
+        var userdto = new UserDTO(user.getName(), user.getUsername(), user.getAuthorities());
         log.warn("User authenticated: {}", user.getName());
         return new AuthResponse(userdto, token);
     }
 
-    public AuthResponse register(RegisterRequest authRequest) {
-        userRepository.findByUsername(authRequest.username()).ifPresent(user -> {
+    public AuthResponse register(RegisterRequest registerRequest) {
+        userRepository.findByUsername(registerRequest.username()).ifPresent(user -> {
             log.error("Username already exists");
             throw new UsernameIsTaken("Username already exists");
         });
         var user = AppUser.builder()
-                .name(authRequest.name())
-                .username(authRequest.username())
-                .password(passwordEncoder.encode(authRequest.password()))
+                .name(registerRequest.name())
+                .username(registerRequest.username())
+                .password(passwordEncoder.encode(registerRequest.password()))
                 .build();
         userRepository.save(user);
         var token = jwtService.generateToken(user);
-        var userdto = new UserDTO(user.getName(), user.getUsername());
+        var userdto = new UserDTO(user.getName(), user.getUsername(), user.getAuthorities());
         log.info("User registered: {}", user.getName());
         return new AuthResponse(userdto, token);
     }

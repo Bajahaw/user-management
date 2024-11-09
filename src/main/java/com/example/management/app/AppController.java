@@ -34,7 +34,7 @@ public class AppController {
 
     @GetMapping("/dashboard")
     public String dashboard(){
-        return "forward:/views/dashboard";
+        return "forward:/views/dashboard.html";
     }
 
     @GetMapping("/logout")

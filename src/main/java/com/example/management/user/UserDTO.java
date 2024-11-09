@@ -1,3 +1,7 @@
 package com.example.management.user;
 
-public record UserDTO(String name, String username) {}
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.List;
+
+public record UserDTO(String name, String username, List<SimpleGrantedAuthority> authorities) {}

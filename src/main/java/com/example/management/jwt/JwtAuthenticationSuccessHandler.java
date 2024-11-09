@@ -29,7 +29,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
         UserDTO userDTO = null;
         String token = "";
         if (principal instanceof AppUser user) {
-            userDTO = new UserDTO(user.getName(), user.getUsername());
+            userDTO = new UserDTO(user.getName(), user.getUsername(), user.getAuthorities());
             token = jwtService.generateToken(user);
         }
 

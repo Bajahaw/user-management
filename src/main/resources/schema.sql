@@ -4,10 +4,11 @@ CREATE TABLE USER_TABLE(
   name VARCHAR(100) NOT NULL,
   username VARCHAR(100) NOT NULL,
   password VARCHAR(100) NOT NULL,
+  roles VARCHAR NOT NULL,
   PRIMARY KEY (id)
 );
 
-INSERT INTO USER_TABLE (name, username, password) VALUES
-    ('Alice', 'alice@mail.co', '$2a$10$Qldj64zlh4eDNm7oGfwmWOkoevSo.Uv1LjXao/Rwsc2jGwjIXKRii'),
-    ('Bob', 'bob@mail.co', '$2a$10$Qldj64zlh4eDNm7oGfwmWOkoevSo.Uv1LjXao/Rwsc2jGwjIXKRii'),
-    ('John', 'John.Doe@mail.co', '$2a$10$Qldj64zlh4eDNm7oGfwmWOkoevSo.Uv1LjXao/Rwsc2jGwjIXKRii');
+INSERT INTO USER_TABLE (name, username, roles, password) VALUES
+    ('Alice', 'alice@mail.co','ROLE_ADMIN', '$2a$10$Qldj64zlh4eDNm7oGfwmWOkoevSo.Uv1LjXao/Rwsc2jGwjIXKRii'),
+    ('Bob', 'bob@mail.co','ROLE_USER', '$2a$10$Qldj64zlh4eDNm7oGfwmWOkoevSo.Uv1LjXao/Rwsc2jGwjIXKRii'),
+    ('John', 'John.Doe@mail.co','ROLE_USER', '$2a$10$Qldj64zlh4eDNm7oGfwmWOkoevSo.Uv1LjXao/Rwsc2jGwjIXKRii');
