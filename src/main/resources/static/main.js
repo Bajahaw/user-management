@@ -121,7 +121,7 @@ function home(data) {
             document.write(html);
             document.getElementById('email').innerText = data.user.username;
             document.getElementById('user').innerText = data.user.name;
-            if (data.user.role?.has('ADMIN'))
+            if (!data.user.authorities?.some(auth => auth.authority === 'ROLE_ADMIN'))
                 document.getElementById('dashboard').style.visibility = 'hidden';
             document.close();
         }).catch(err => console.log(err));
