@@ -1,9 +1,11 @@
 package com.example.management.app;
 
+import com.example.management.auth.AuthService;
 import com.example.management.user.AppUser;
 import com.example.management.user.UserRepository;
-import com.example.management.auth.AuthService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AppService {
@@ -21,5 +23,13 @@ public class AppService {
 
     public void addUser(AppUser user) {
         userRepository.save(user);
+    }
+
+    public List<AppUser> getAllUsers() {
+        return userRepository.getAllUsers();
+    }
+
+    public boolean deleteUser(String user) {
+        return userRepository.delete(user);
     }
 }

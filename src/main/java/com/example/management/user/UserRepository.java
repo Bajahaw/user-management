@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -53,5 +54,16 @@ public class UserRepository {
                 UserRepository::rowMapper,
                 username
         ).stream().findFirst();
+    }
+
+    public List<AppUser> getAllUsers() {
+        String sql = "SELECT * FROM USER_TABLE";
+        return jdbcTemplate.query(sql, UserRepository::rowMapper);
+    }
+
+    public boolean delete(String username) {
+        String sql = "DELETE FROM USER_TABLE WHERE USERNAME = ?";
+        jdbcTemplate.update(sql, username);
+        return true;
     }
 }

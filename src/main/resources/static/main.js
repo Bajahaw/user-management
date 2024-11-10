@@ -6,7 +6,6 @@ form = document.getElementById('userForm');
 registerForm = document.getElementById('registerForm');
 
 
-
 if (registerForm) registerForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
@@ -55,10 +54,19 @@ if (form) form.addEventListener('submit', (event) => {
                 .then(response => {
                     setAlertMessage(response);
                 });
-        });
+        }).catch(err => console.log(err));
 });
 
-if (dashboard_btn) dashboard_btn.addEventListener('click', () => {
+if (dashboard_btn) dashboard_btn.addEventListener('click', async () => {
+    let users = await fetch(
+        '/dashboard/users', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+            }
+        }).then(r => r.json())
+        .catch(err => console.log(err));
+
     fetch('/dashboard', {
         method: 'GET',
         headers: {
@@ -70,9 +78,33 @@ if (dashboard_btn) dashboard_btn.addEventListener('click', () => {
             history.pushState(null, '', '/dashboard');
             document.open();
             document.write(html);
+            document.getElementById('list').innerHTML =
+                `
+                ${users.map(user => `<li id="${user.username}-item" class="user-data rounded-2 border border-info bg-info-subtle mb-1">
+                    <div class=" d-flex justify-content-between align-items-center">
+                        <small class="m-1">${user.username}</small>
+                        <button id="${user.username}" class="btn btn-sm">🗑</button>
+                    </div>
+                </li>`).join(`\n`)}
+            `
+            users.forEach(user =>
+                document
+                    .getElementById(user.username)
+                    .addEventListener('click', (e) => {
+                        e.preventDefault();
+                        fetch(`delete/${user.username}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                            }
+                        }).then(() => {
+                            document.getElementById(`${user.username}-item`).remove();
+                        });
+                    }));
             document.close();
-        });
-})
+        })
+        .catch(err => console.log(err));
+});
 
 function home(data) {
     fetch('/home', {
@@ -92,7 +124,7 @@ function home(data) {
             if (data.user.role?.has('ADMIN'))
                 document.getElementById('dashboard').style.visibility = 'hidden';
             document.close();
-        });
+        }).catch(err => console.log(err));
 }
 
 function form_to_json(form) {

@@ -37,7 +37,7 @@ public class SecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers("api/v1/auth/**", "/h2-console/**", "/login", "/signup","/views/auth/**","/", "/index.html", "/main.js", "/favicon.ico")
                                 .permitAll()
-                                .requestMatchers("/dashboard", "/views/dashboard.html")
+                                .requestMatchers("/dashboard", "/views/dashboard.html", "/delete/**")
                                 .hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
