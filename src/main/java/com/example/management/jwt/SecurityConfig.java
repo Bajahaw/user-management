@@ -27,7 +27,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             JsonUsernamePasswordAuthFilter jsonUsernamePasswordAuthFilter
-            ) throws Exception {
+    ) throws Exception {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -35,7 +35,7 @@ public class SecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("api/v1/auth/**", "/h2-console/**", "/login", "/signup","/views/auth/**","/", "/index.html", "/main.js", "/favicon.ico")
+                                .requestMatchers("api/v1/auth/**", "/h2-console/**", "/login", "/signup", "/views/auth/**", "/", "/index.html", "/main.js", "/favicon.ico", "/403")
                                 .permitAll()
                                 .requestMatchers("/dashboard", "/views/dashboard.html", "/delete/**")
                                 .hasRole("ADMIN")
@@ -48,6 +48,9 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout")
                         .logoutSuccessUrl("/login")
+                )
+                .exceptionHandling(ex ->
+                        ex.accessDeniedPage("/403")
                 )
                 .sessionManagement(session ->
                         session

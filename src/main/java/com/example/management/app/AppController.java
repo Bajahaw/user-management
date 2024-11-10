@@ -35,6 +35,11 @@ public class AppController {
         return "forward:/views/auth/signup.html";
     }
 
+    @GetMapping("/403")
+    public String forbidden(){
+        return "forward:/views/auth/403.html";
+    }
+
     @GetMapping("/dashboard")
     public String dashboard(){
         return "forward:/views/dashboard.html";
