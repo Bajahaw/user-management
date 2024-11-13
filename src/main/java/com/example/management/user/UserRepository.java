@@ -63,7 +63,7 @@ public class UserRepository {
 
     public boolean delete(String username) {
         String sql = "DELETE FROM USER_TABLE WHERE USERNAME = ?";
-        jdbcTemplate.update(sql, username);
-        return true;
+        int succeeded = jdbcTemplate.update(sql, username);
+        return succeeded == 1;
     }
 }

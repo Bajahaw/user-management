@@ -10,8 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -190,5 +194,43 @@ public class AuthenticationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deletingUser() throws Exception {
+        AtomicReference<String> token = new AtomicReference<>();
+        String jsonBody = """ 
+                {
+                    "username": "alice@mail.co",
+                    "password": "pass"
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/auth/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isOk())
+                        .andExpect(result -> {
+                            String response = result.getResponse().getContentAsString();
+                            assertTrue(response.contains("token"));
+                            token.set(response.split("token")[1].split("\"")[2]);
+                            System.out.println(token);
+                        });
+        mockMvc.perform(delete("/delete/bob@mail.co").header("Authorization", "Bearer " + token))
+                .andExpect(result ->
+                        assertEquals(
+                                "Deleted",
+                                result
+                                        .getResponse()
+                                        .getContentAsString())
+                );
+        mockMvc.perform(delete("/delete/bob@mail.co").header("Authorization", "Bearer " + token))
+                .andExpect(result ->
+                        assertEquals(
+                                "Not Found",
+                                result
+                                        .getResponse()
+                                        .getContentAsString())
+                );
     }
 }
