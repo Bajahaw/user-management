@@ -20,9 +20,9 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
             if (response.headers.get('Content-Type').startsWith('application/json')) {
                 response.json()
                     .then(data => {
-                        let token = data.token;
-                        localStorage.setItem('jwt', token);
-                        home(data);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        localStorage.setItem('jwt', data.token);
+                        home();
                     });
             } else response.text()
                 .then(response => {
@@ -46,9 +46,9 @@ if (form) form.addEventListener('submit', (event) => {
             if (response.headers.get('Content-Type').startsWith('application/json')) {
                 response.json()
                     .then(data => {
-                        let token = data.token;
-                        localStorage.setItem('jwt', token);
-                        home(data);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        localStorage.setItem('jwt', data.token);
+                        home();
                     });
             } else response.text()
                 .then(response => {
@@ -106,7 +106,8 @@ if (dashboard_btn) dashboard_btn.addEventListener('click', async () => {
         .catch(err => console.log(err));
 });
 
-function home(data) {
+function home() {
+    let user = JSON.parse(localStorage.getItem('user'));
     fetch('/home', {
         method: 'GET',
         headers: {
@@ -116,15 +117,17 @@ function home(data) {
     })
         .then(response => response.text())
         .then(html => {
-            history.pushState(null, '', `/${data.user.username}`);
+            history.pushState(null, '', `/${user.username}`);
             document.open();
             document.write(html);
-            document.getElementById('email').innerText = data.user.username;
-            document.getElementById('user').innerText = data.user.name;
-            if (!data.user.authorities?.some(auth => auth.authority === 'ROLE_ADMIN'))
+            document.getElementById('email').innerText = user.username;
+            document.getElementById('user').innerText = user.name;
+
+            if (!user.authorities?.some(auth => auth.authority === 'ROLE_ADMIN'))
                 document.getElementById('dashboard').style.visibility = 'hidden';
+
             document.close();
-        }).catch(err => console.log(err));
+        }).catch(() => localStorage.clear());
 }
 
 function form_to_json(form) {
