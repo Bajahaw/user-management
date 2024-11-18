@@ -1,10 +1,11 @@
 package com.example.management.auth;
 
 import com.example.management.exceptions.UsernameIsTaken;
-import com.example.management.jwt.JwtService;
+import com.example.management.security.jwt.JwtService;
 import com.example.management.user.AppUser;
 import com.example.management.user.UserDTO;
 import com.example.management.user.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -64,10 +65,19 @@ public class AuthService {
                 .password(passwordEncoder.encode(registerRequest.password()))
                 .authorities(List.of(new SimpleGrantedAuthority("ROLE_USER")))
                 .build();
-        userRepository.save(user);
+        Integer userId = userRepository.save(user);
+        user.setId(userId);
         var token = jwtService.generateToken(user);
         var userdto = new UserDTO(user.getName(), user.getUsername(), user.getAuthorities());
         log.info("User registered: {}", user.getName());
         return new AuthResponse(userdto, token);
+    }
+
+    public void logout(HttpServletRequest request) {
+        var header = request.getHeader("Authorization");
+        assert header != null;
+        String token = header.substring(7);
+        System.out.println("brrrrrrrrrrrrrrrr " + token);
+        jwtService.invalidate(token);
     }
 }

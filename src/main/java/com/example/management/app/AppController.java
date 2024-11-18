@@ -11,7 +11,7 @@ import java.util.List;
 public class AppController {
     private final AppService appService;
 
-    public AppController(AppService appService){
+    public AppController(AppService appService) {
         this.appService = appService;
     }
 
@@ -36,30 +36,25 @@ public class AppController {
     }
 
     @GetMapping("/403")
-    public String forbidden(){
+    public String forbidden() {
         return "forward:/views/auth/403.html";
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(){
+    public String dashboard() {
         return "forward:/views/dashboard.html";
     }
 
     @GetMapping("/dashboard/users")
     @ResponseBody
-    public ResponseEntity<List<AppUser>> getAllUsers(){
+    public ResponseEntity<List<AppUser>> getAllUsers() {
         return ResponseEntity.status(200).body(appService.getAllUsers());
     }
 
     @DeleteMapping("/delete/{user}")
-    public ResponseEntity<String> delete(@PathVariable String user){
-        return appService.deleteUser(user)?
+    public ResponseEntity<String> delete(@PathVariable String user) {
+        return appService.deleteUser(user) ?
                 ResponseEntity.status(200).body("Deleted") :
                 ResponseEntity.status(404).body("Not Found");
-    }
-
-    @GetMapping("/logout")
-    public ResponseEntity<String> logout(){
-        return ResponseEntity.ok("Bye you're out");
     }
 }

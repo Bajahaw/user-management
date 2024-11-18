@@ -1,4 +1,4 @@
-package com.example.management.jwt;
+package com.example.management.security.jwt;
 
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
@@ -50,14 +50,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             // log.info("Auth header found -> Header: {}", authHeader);
             token = authHeader.substring(7);
             username = jwtService.extractUsername(token);
-            if(username == null || SecurityContextHolder.getContext().getAuthentication() != null){
+            if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
                 // log.info("Username is null or already authenticated");
                 filterChain.doFilter(request, response);
                 return;
             }
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            if (jwtService.isValidToken(token, userDetails)){
+            Jwt jwt = this.jwtService.getToken(token);
+            if (jwtService.isValidToken(jwt, userDetails)) {
                 // log.info("Token is valid");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,

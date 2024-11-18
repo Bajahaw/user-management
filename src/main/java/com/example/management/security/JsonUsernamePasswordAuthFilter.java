@@ -1,6 +1,8 @@
-package com.example.management.jwt;
+package com.example.management.security;
 
 import com.example.management.auth.AuthRequest;
+import com.example.management.security.jwt.JwtAuthenticationFailureHandler;
+import com.example.management.security.jwt.JwtAuthenticationSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class JsonUsernamePasswordAuthFilter extends UsernamePasswordAuthenticationFilter{
+public class JsonUsernamePasswordAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     public JsonUsernamePasswordAuthFilter(AuthenticationManager authenticationManager, JwtAuthenticationFailureHandler failureHandler, JwtAuthenticationSuccessHandler successHandler) {
         super(authenticationManager);
@@ -24,7 +26,7 @@ public class JsonUsernamePasswordAuthFilter extends UsernamePasswordAuthenticati
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)){
+        if (request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
             ObjectMapper map = new ObjectMapper();
             try {
                 AuthRequest authRequest = map.readValue(request.getInputStream(), AuthRequest.class);

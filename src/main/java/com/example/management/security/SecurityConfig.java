@@ -1,5 +1,6 @@
-package com.example.management.jwt;
+package com.example.management.security;
 
+import com.example.management.security.jwt.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -39,15 +40,13 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers("/dashboard", "/views/dashboard.html", "/delete/**")
                                 .hasRole("ADMIN")
+                                .requestMatchers("api/v1/auth/logout")
+                                .authenticated()
                                 .anyRequest()
                                 .authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/api/v1/auth/logout")
-                        .logoutSuccessUrl("/login")
                 )
                 .exceptionHandling(ex ->
                         ex.accessDeniedPage("/403")

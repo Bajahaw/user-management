@@ -1,12 +1,12 @@
 package com.example.management.user;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,46 +19,39 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private static AppUser rowMapper(ResultSet rs, int rowNum) throws SQLException {
-        return new AppUser(
-                rs.getInt("ID"),
-                rs.getString("NAME"),
-                rs.getString("USERNAME"),
-                rs.getString("PASSWORD"),
-                Arrays
-                        .stream(rs.getString("ROLES").split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .toList()
-                );
-    }
-
-    public void save(AppUser user) {
+    public Integer save(AppUser user) {
         String sql = "INSERT INTO USER_TABLE (NAME, USERNAME, PASSWORD, ROLES) VALUES (?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         StringBuilder roles = new StringBuilder();
         user.getAuthorities().forEach(sga -> {
             roles.append(sga.getAuthority());
             roles.append(',');
         });
         jdbcTemplate.update(
-                sql, user.getName(),
-                user.getUsername(),
-                user.getPassword(),
-                roles
+                con -> {
+                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, user.getName());
+                    ps.setString(2, user.getUsername());
+                    ps.setString(3, user.getPassword());
+                    ps.setString(4, roles.toString());
+                    return ps;
+                }, keyHolder
         );
+        return keyHolder.getKeyAs(Integer.class);
     }
 
     public Optional<AppUser> findByUsername(String username) {
         String sql = "SELECT * FROM USER_TABLE WHERE USERNAME = ?";
         return jdbcTemplate.query(
                 sql,
-                UserRepository::rowMapper,
+                UserRowMapper::rowMapper,
                 username
         ).stream().findFirst();
     }
 
     public List<AppUser> getAllUsers() {
         String sql = "SELECT * FROM USER_TABLE";
-        return jdbcTemplate.query(sql, UserRepository::rowMapper);
+        return jdbcTemplate.query(sql, UserRowMapper::rowMapper);
     }
 
     public boolean delete(String username) {

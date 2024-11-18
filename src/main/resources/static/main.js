@@ -1,10 +1,22 @@
 // const login_btn = document.getElementById('btn');
 // const signup_btn = document.getElementById('signup');
-// const logout_btn = document.getElementById('loguot');
+logout_btn = document.getElementById('logout');
 dashboard_btn = document.getElementById('dashboard');
 form = document.getElementById('userForm');
 registerForm = document.getElementById('registerForm');
 
+if (logout_btn) logout_btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    fetch('/api/v1/auth/logout', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+    }).then(() => {
+        window.location.replace('/');
+        localStorage.removeItem('jwt');
+    })
+});
 
 if (registerForm) registerForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -115,19 +127,23 @@ function home() {
             'Content-Type': 'application/json'
         }
     })
-        .then(response => response.text())
-        .then(html => {
-            history.pushState(null, '', `/${user.username}`);
-            document.open();
-            document.write(html);
-            document.getElementById('email').innerText = user.username;
-            document.getElementById('user').innerText = user.name;
+        .then(response => {
+            if (!response.headers.get('Content-Type').includes('plain'))
+                response.text()
+                    .then(html => {
+                        history.pushState(null, '', `/${user.username}`);
+                        document.open();
+                        document.write(html);
+                        document.getElementById('email').innerText = user.username;
+                        document.getElementById('user').innerText = user.name;
 
-            if (!user.authorities?.some(auth => auth.authority === 'ROLE_ADMIN'))
-                document.getElementById('dashboard').style.visibility = 'hidden';
+                        if (!user.authorities?.some(auth => auth.authority === 'ROLE_ADMIN'))
+                            document.getElementById('dashboard').style.visibility = 'hidden';
 
-            document.close();
-        }).catch(() => localStorage.clear());
+                        document.close();
+                    }).catch(() => localStorage.removeItem('jwt'));
+            if (response.redirected) localStorage.removeItem('jwt');
+        })
 }
 
 function form_to_json(form) {

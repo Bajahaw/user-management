@@ -1,5 +1,6 @@
-package com.example.management.jwt;
+package com.example.management.security.jwt;
 
+import com.example.management.user.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -17,16 +18,24 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    private final JwtRepository jwtRepository;
     @Value("${jwt.secret}")
     private String SECRET;
 
-    public String extractUsername(String token) {
-        return extactClaim(token, Claims::getSubject);
+    public JwtService(JwtRepository jwtRepository) {
+        this.jwtRepository = jwtRepository;
     }
 
-    public boolean isValidToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public boolean isValidToken(Jwt token, UserDetails userDetails) {
+        final String username = extractUsername(token.getToken());
+        return
+                username.equals(userDetails.getUsername()) &&
+                        !isTokenExpired(token.getToken()) &&
+                        !token.isLoggedOut();
     }
 
     private boolean isTokenExpired(String token) {
@@ -34,11 +43,14 @@ public class JwtService {
     }
 
     private Date extractExpirationToken(String token) {
-        return extactClaim(token, Claims::getExpiration);
+        return extractClaim(token, Claims::getExpiration);
     }
 
     public String generateToken(UserDetails user) {
-        return generateToken(new HashMap<>(), user);
+        var token = generateToken(new HashMap<>(), user);
+        var jwt = new Jwt(token, (AppUser) user);
+        jwtRepository.save(jwt);
+        return token;
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails user) {
@@ -52,7 +64,7 @@ public class JwtService {
                 .compact();
     }
 
-    public <T> T extactClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -64,11 +76,21 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
     }
 
     private SecretKey getSignInKey() {
         byte[] bytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(bytes);
+    }
+
+    public Jwt getToken(String token) {
+        return jwtRepository.getJwt(token).orElseThrow();
+    }
+
+    public void invalidate(String token) {
+        Jwt jwt = getToken(token);
+        jwt.setLoggedOut(true);
+        jwtRepository.update(jwt);
+        System.out.println(getToken(token).isLoggedOut() + " loooooooooooooooooooged out");
     }
 }

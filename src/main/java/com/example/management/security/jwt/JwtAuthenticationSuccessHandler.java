@@ -1,4 +1,4 @@
-package com.example.management.jwt;
+package com.example.management.security.jwt;
 
 import com.example.management.auth.AuthResponse;
 import com.example.management.user.AppUser;
@@ -17,6 +17,7 @@ import java.io.IOException;
 public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     JwtService jwtService;
     ObjectMapper objectMapper;
+
     public JwtAuthenticationSuccessHandler(JwtService jwtService) {
         this.jwtService = jwtService;
         this.objectMapper = new ObjectMapper();
