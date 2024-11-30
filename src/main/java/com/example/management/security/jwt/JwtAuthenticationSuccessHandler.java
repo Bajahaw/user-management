@@ -4,7 +4,6 @@ import com.example.management.auth.AuthResponse;
 import com.example.management.user.AppUser;
 import com.example.management.user.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -24,7 +23,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 
         var principal = authentication.getPrincipal();
         UserDTO userDTO = null;

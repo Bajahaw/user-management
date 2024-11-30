@@ -1,5 +1,6 @@
 package com.example.management.security.jwt;
 
+import com.example.management.exceptions.InvalidJwtException;
 import com.example.management.user.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -84,13 +85,12 @@ public class JwtService {
     }
 
     public Jwt getToken(String token) {
-        return jwtRepository.getJwt(token).orElseThrow();
+        return jwtRepository.getJwt(token).orElseThrow(() -> new InvalidJwtException("Invalid web token"));
     }
 
     public void invalidate(String token) {
         Jwt jwt = getToken(token);
         jwt.setLoggedOut(true);
         jwtRepository.update(jwt);
-        System.out.println(getToken(token).isLoggedOut() + " loooooooooooooooooooged out");
     }
 }

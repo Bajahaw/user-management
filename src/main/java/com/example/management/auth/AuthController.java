@@ -28,8 +28,6 @@ public class AuthController {
 
     @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
-        System.out.println("brrrrrrrrrrrrrrrr");
-
         authService.logout(request);
         return ResponseEntity.ok("Bye you're out");
     }

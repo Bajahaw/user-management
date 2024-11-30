@@ -8,13 +8,16 @@ import lombok.Builder;
 
 @Builder
 public record RegisterRequest(
+
         @NotBlank(message = "Empty name")
         @Size(max = 50, message = "Name is too Long")
         String name,
+
         @NotBlank(message = "Empty email")
         @Email(message = "Invalid email")
         @Size(max = 100, message = "Email is too Long")
         String username,
+
         @NotBlank(message = "Empty password")
         @Size(min = 8, max = 50, message = "Invalid password length")
         @Pattern(regexp = "^\\s*\\S+\\s*$", message = "Password can't include spaces")

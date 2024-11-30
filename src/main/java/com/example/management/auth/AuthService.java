@@ -77,7 +77,6 @@ public class AuthService {
         var header = request.getHeader("Authorization");
         assert header != null;
         String token = header.substring(7);
-        System.out.println("brrrrrrrrrrrrrrrr " + token);
         jwtService.invalidate(token);
     }
 }
