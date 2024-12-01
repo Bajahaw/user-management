@@ -41,7 +41,6 @@ public class UserRepository {
     }
 
     public Optional<AppUser> findByUsername(String username) {
-        System.out.println(username);
         String sql = "SELECT * FROM USER_TABLE WHERE USERNAME = ?";
         return jdbcTemplate.query(
                 sql,
