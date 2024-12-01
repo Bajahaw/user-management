@@ -36,9 +36,9 @@ public class SecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("api/v1/auth/**", "/h2-console/**", "/login", "/signup", "/views/auth/**", "/", "/index.html", "/main.js", "/favicon.ico", "/403")
+                                .requestMatchers("api/v1/auth/**", "/h2-console/**", "/login", "/signup", "/views/auth/**", "/index.html", "/main.js","/views/admin/admin.js", "/style.css","/favicon.ico", "/403")
                                 .permitAll()
-                                .requestMatchers("/dashboard", "/views/dashboard.html", "/delete/**")
+                                .requestMatchers("/dashboard", "/views/admin/**", "/delete/**")
                                 .hasRole("ADMIN")
                                 .requestMatchers("api/v1/auth/logout")
                                 .authenticated()

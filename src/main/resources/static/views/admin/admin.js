@@ -70,5 +70,6 @@ async function fetchUsers() {
                 </button>
             </li>
         `).join(`\n`)}
-    `
+    `;
+    updateUserCount();
 }

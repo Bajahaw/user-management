@@ -42,7 +42,7 @@ public class AppController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "forward:/views/dashboard.html";
+        return "forward:/views/admin/dashboard.html";
     }
 
     @GetMapping("/dashboard/users")
