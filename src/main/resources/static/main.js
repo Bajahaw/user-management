@@ -114,8 +114,8 @@ function home() {
         })
 }
 
-function form_to_json(form) {
-    const formData = new FormData(form);
+function form_to_json(formToConvert) {
+    const formData = new FormData(formToConvert);
     const data = {};
     formData.forEach((value, key) => {
         data[key] = value;
