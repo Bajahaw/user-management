@@ -8,10 +8,12 @@ const addUserModal = new bootstrap.Modal(document.getElementById('addUserModal')
 searchInput.addEventListener('input', (e) => {
     const searchTerm = e.target.value.toLowerCase();
     const users = userList.querySelectorAll('.user-list-item');
-
     users.forEach(user => {
         const email = user.querySelector('span').textContent.toLowerCase();
-        user.style.display = email.includes(searchTerm) ? '' : 'none';
+        if ( email.includes(searchTerm) )
+            user.style.setProperty("display", "flex", "important")
+        else
+            user.style.setProperty("display", "none", "important");
     });
 });
 
