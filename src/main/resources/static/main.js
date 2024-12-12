@@ -30,14 +30,12 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
     })
         .then(response => {
             if (response.headers.get('Content-Type').startsWith('application/json')) {
-                response.json()
-                    .then(data => {
+                response.json().then(data => {
                         localStorage.setItem('user', JSON.stringify(data.user));
                         localStorage.setItem('jwt', data.token);
                         home();
                     });
-            } else response.text()
-                .then(response => {
+            } else response.text().then(response => {
                     setAlertMessage(response);
                 });
         });
@@ -46,6 +44,7 @@ if (registerForm) registerForm.addEventListener('submit', (event) => {
 
 if (form) form.addEventListener('submit', (event) => {
     event.preventDefault();
+
     fetch('/login', {
         method: 'POST',
         headers: {
@@ -55,6 +54,7 @@ if (form) form.addEventListener('submit', (event) => {
         redirect: "follow"
     })
         .then(response => {
+
             if (response.headers.get('Content-Type').startsWith('application/json')) {
                 response.json()
                     .then(data => {
@@ -62,10 +62,12 @@ if (form) form.addEventListener('submit', (event) => {
                         localStorage.setItem('jwt', data.token);
                         home();
                     });
-            } else response.text()
-                .then(response => {
+
+            } else
+                response.text().then(response => {
                     setAlertMessage(response);
                 });
+
         }).catch(err => console.log(err));
 });
 
@@ -76,8 +78,7 @@ if (dashboard_btn) dashboard_btn.addEventListener('click', async () => {
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
         }
     })
-        .then(r => r.text())
-        .then(html => {
+        .then(r => r.text()).then(html => {
             history.pushState(null, '', '/dashboard');
             document.open();
             document.write(html);
@@ -87,7 +88,9 @@ if (dashboard_btn) dashboard_btn.addEventListener('click', async () => {
 });
 
 function home() {
+
     let user = JSON.parse(localStorage.getItem('user'));
+
     fetch('/home', {
         method: 'GET',
         headers: {
@@ -97,19 +100,19 @@ function home() {
     })
         .then(response => {
             if (!response.headers.get('Content-Type').includes('plain'))
-                response.text()
-                    .then(html => {
-                        history.pushState(null, '', `/${user.username}`);
-                        document.open();
-                        document.write(html);
-                        document.getElementById('email').innerText = user.username;
-                        document.getElementById('user').innerText = user.name;
+                response.text().then(html => {
 
-                        if (!user.authorities?.some(auth => auth.authority === 'ROLE_ADMIN'))
-                            document.getElementById('dashboard').style.visibility = 'hidden';
+                    history.pushState(null, '', `/${user.username}`);
+                    document.open();
+                    document.write(html);
+                    document.getElementById('email').innerText = user.username;
+                    document.getElementById('user').innerText = user.name;
 
-                        document.close();
-                    }).catch(() => localStorage.removeItem('jwt'));
+                    if (!user.authorities?.some(auth => auth.authority === 'ROLE_ADMIN'))
+                        document.getElementById('dashboard').style.visibility = 'hidden';
+
+                    document.close();
+                }).catch(() => localStorage.removeItem('jwt'));
             if (response.redirected) localStorage.removeItem('jwt');
         })
 }
