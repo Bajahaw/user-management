@@ -81,18 +81,20 @@ function addUserToDashboard(user) {
 function showUserData(userElement){
     const username = userElement.getElementsByTagName('span')[0].textContent;
     const user = users.filter(user => user.username === username)[0];
-    console.log(user.username);
     const body = document.querySelector('#userDataModal .modal-body');
 
-    body.children[1].innerText = user.username;
-    body.children[2].innerText = user.name;
+    body.children[1].innerText = user.username; // email
+    body.children[2].innerText = user.name; // user name
+    body.children[4].innerHTML = user.authorities.map(authority =>
+        `<span class="badge bg-info-subtle text-info rounded-pill">${authority.authority}</span>`
+    );
 
     userDataModal.show();
 }
 
 function updateUserCount() {
     const users = userList.querySelectorAll('.user-list-item');
-    userCount.textContent = users.length;
+    userCount.textContent = users.length.toString();
 }
 
 async function fetchUsers() {
