@@ -29,6 +29,7 @@ public class AppUser implements UserDetails {
     @NotBlank(message = "Empty password")
     private String password;
 
+    @Setter
     @NotEmpty
     private List<SimpleGrantedAuthority> authorities;
 

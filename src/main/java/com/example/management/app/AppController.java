@@ -3,10 +3,7 @@ package com.example.management.app;
 import com.example.management.user.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -59,5 +56,11 @@ public class AppController {
         return appService.deleteUser(user) ?
                 ResponseEntity.status(200).body("Deleted") :
                 ResponseEntity.status(404).body("Not Found");
+    }
+
+    @PostMapping("/make-admin/{email}")
+    public ResponseEntity<String> makeAdmin(@PathVariable String email){
+        appService.makeAdmin(email);
+        return ResponseEntity.ok(email.toUpperCase() + " is now Admin");
     }
 }

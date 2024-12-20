@@ -87,9 +87,28 @@ function showUserData(userElement){
     body.children[2].innerText = user.name; // user name
     body.children[4].innerHTML = user.authorities.map(authority =>
         `<span class="badge bg-info-subtle text-info rounded-pill">${authority.authority}</span>`
-    );
+    ); // roles
+
+    if (user.authorities?.some(auth => auth.authority === 'ROLE_ADMIN')) {
+        body.children[5].style.visibility = 'hidden'; // make admin btn
+        body.children[5].style.position = 'absolute';
+    }
+    else {
+        body.children[5].style.visibility = 'visible';
+        body.children[5].style.position = 'relative';
+    }
 
     userDataModal.show();
+}
+
+function makeAdmin(){
+    const username = document.getElementById('email').textContent;
+    fetch(`/make-admin/${username}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+    }).catch(err => console.log(err));
 }
 
 function updateUserCount() {
@@ -102,7 +121,7 @@ async function fetchUsers() {
         '/dashboard/users', {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+                'Authorization': `Bearer ${localStorage.getItem('jwt')}`
             }
         }).then(r => r.json())
         .catch(err => console.log(err));

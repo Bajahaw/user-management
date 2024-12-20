@@ -59,4 +59,22 @@ public class UserRepository {
         int succeeded = jdbcTemplate.update(sql, username);
         return succeeded == 1;
     }
+
+    public void update(AppUser user) {
+        String sql = "UPDATE USER_TABLE SET NAME = ?, USERNAME = ?, PASSWORD = ?, ROLES = ? WHERE id = ?";
+
+        StringBuilder roles = new StringBuilder();
+        user.getAuthorities().forEach(sga -> {
+            roles.append(sga.getAuthority());
+            roles.append(',');
+        });
+
+        jdbcTemplate.update(sql,
+                user.getName(),
+                user.getUsername(),
+                user.getPassword(),
+                roles,
+                user.getId()
+        );
+    }
 }
