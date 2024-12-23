@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
@@ -33,6 +34,11 @@ public class ExceptionHandlerController {
         return ResponseEntity
                 .badRequest()
                 .body(errorMessage);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public String handleNotFound(){
+        return "forward:/views/404.html";
     }
 
     @ExceptionHandler(Exception.class)
