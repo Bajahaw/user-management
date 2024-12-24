@@ -18,3 +18,12 @@ The system currently uses an in-memory database for the purpose of development.
 
 The system uses JWT for authentication. The JWT token is generated when a user logs in and is stored in the local
 storage.
+
+### ScreenShots
+
+<img src="https://github.com/user-attachments/assets/c6ff764b-de45-4c1a-a055-c81221219b5a" width="49%">
+<img src="https://github.com/user-attachments/assets/1406ca0a-c1ad-4f25-aa5f-defde5f6e4f8" width="49%">
+<img src="https://github.com/user-attachments/assets/93f160db-f35b-4a19-82d9-ce443da2134a" width="49%">
+<img src="https://github.com/user-attachments/assets/980ba231-b8ba-41bd-a5d3-6def256ada09" width="49%">
+<img src="https://github.com/user-attachments/assets/a18c79ff-0dcb-4b69-8fe5-022ba098a4e2" width="49%">
+<img src="https://github.com/user-attachments/assets/99692cf5-a55b-4a85-aa2f-d21d119cd0ac" width="49%">
