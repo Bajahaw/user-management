@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import org.apache.commons.text.StringEscapeUtils;
 @Controller
 public class AppController {
     private final AppService appService;
@@ -61,6 +61,7 @@ public class AppController {
     @PostMapping("/make-admin/{email}")
     public ResponseEntity<String> makeAdmin(@PathVariable String email){
         appService.makeAdmin(email);
-        return ResponseEntity.ok(email.toUpperCase() + " is now Admin");
+        String safeEmail = StringEscapeUtils.escapeHtml4(email.toUpperCase());
+        return ResponseEntity.ok(safeEmail + " is now Admin");
     }
 }
