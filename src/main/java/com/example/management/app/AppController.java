@@ -61,7 +61,7 @@ public class AppController {
     @PostMapping("/make-admin/{email}")
     public ResponseEntity<String> makeAdmin(@PathVariable String email){
         appService.makeAdmin(email);
-        String safeEmail = StringEscapeUtils.escapeHtml4(email.toUpperCase());
+        String safeEmail = StringEscapeUtils.escapeHtml4(email);
         return ResponseEntity.ok(safeEmail + " is now Admin");
     }
 }
