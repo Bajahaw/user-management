@@ -47,35 +47,47 @@ public class AuthService {
             throw new BadCredentialsException("Incorrect username/password supplied");
         }
 
+        // At this point the user is authenticated, the rest is just to send back the info
         var user = userRepository.findByUsername(authRequest.username()).orElseThrow();
         var token = jwtService.generateToken(user);
         var userdto = new UserDTO(user.getName(), user.getUsername(), user.getAuthorities());
+
         log.warn("User authenticated: {}", user.getName());
         return new AuthResponse(userdto, token);
     }
 
     public AuthResponse register(RegisterRequest registerRequest) {
+        // Just checking if username is already registered
         userRepository.findByUsername(registerRequest.username()).ifPresent(user -> {
             log.error("Username already exists");
             throw new UsernameIsTaken("Username already exists");
         });
+
+        // At this point the new user can be created
         var user = AppUser.builder()
                 .name(registerRequest.name())
                 .username(registerRequest.username())
                 .password(passwordEncoder.encode(registerRequest.password()))
                 .authorities(List.of(new SimpleGrantedAuthority("ROLE_USER")))
                 .build();
+
+        // Assigning the Id set by jdbc
         Integer userId = userRepository.save(user);
         user.setId(userId);
+
+        // Doing the auth and sending back the data
         var token = jwtService.generateToken(user);
         var userdto = new UserDTO(user.getName(), user.getUsername(), user.getAuthorities());
+
         log.info("User registered: {}", user.getName());
         return new AuthResponse(userdto, token);
     }
 
     public void logout(HttpServletRequest request) {
+        // checking if there is token to invalidate
         var header = request.getHeader("Authorization");
         assert header != null;
+
         String token = header.substring(7);
         jwtService.invalidate(token);
     }

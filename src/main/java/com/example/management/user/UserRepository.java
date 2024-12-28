@@ -21,12 +21,17 @@ public class UserRepository {
 
     public Integer save(AppUser user) {
         String sql = "INSERT INTO USER_TABLE (NAME, USERNAME, PASSWORD, ROLES) VALUES (?, ?, ?, ?)";
+
+        // Key holder used to get the id set by the jdbcTemplate on the db
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        // Roles list stored as strings seperated by ','
         StringBuilder roles = new StringBuilder();
         user.getAuthorities().forEach(sga -> {
             roles.append(sga.getAuthority());
             roles.append(',');
         });
+
         jdbcTemplate.update(
                 con -> {
                     PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -37,6 +42,8 @@ public class UserRepository {
                     return ps;
                 }, keyHolder
         );
+
+        // return the Id of row stored in db
         return keyHolder.getKeyAs(Integer.class);
     }
 
